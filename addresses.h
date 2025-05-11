@@ -51,6 +51,7 @@ namespace modules
 struct CGcBanInformation_t
 {
 	uint32_t m_uiReason;
+	double m_dblUnk;
 	double m_dblExpiration;
 	uint32_t m_uiAccountId;
 };
