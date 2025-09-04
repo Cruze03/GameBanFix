@@ -129,7 +129,7 @@ const char *GameBanFix::GetLicense()
 
 const char *GameBanFix::GetVersion()
 {
-	return "1.0.2";
+	return "1.0.3";
 }
 
 const char *GameBanFix::GetDate()
