@@ -55,15 +55,24 @@ jobs:
           ref: master
           path: hl2sdk-manifests
 
-      - name: Checkout AMBuild
-        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install pip
+        shell: cmd
+        run: curl https://bootstrap.pypa.io/pip/3.6/get-pip.py | python
+
+      - name: Clone AMBuild
+        uses: actions/checkout@v6
         with:
           repository: alliedmodders/ambuild
-          path: ambuild
+          path: ./ambuild
 
       - name: Install AMBuild
         run: |
-          cd ambuild && python setup.py install && cd ..
+          python -m pip install ./ambuild
 
       - name: Build
         working-directory: gamebanfix
