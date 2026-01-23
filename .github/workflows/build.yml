@@ -54,12 +54,13 @@ jobs:
           repository: alliedmodders/hl2sdk-manifests
           ref: master
           path: hl2sdk-manifests
-
+# ------------ Windows ------------
       - name: Set up Python
         uses: actions/setup-python@v6
+        if: runner.os == 'Windows'
         with:
           python-version: "3.11"
-# ------------ Windows ------------
+
       - name: Install pip
         if: runner.os == 'Windows'
         shell: cmd
