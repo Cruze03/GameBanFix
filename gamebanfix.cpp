@@ -6,7 +6,7 @@
 #include "schemasystem/schemasystem.h"
 #include <KeyValues.h>
 
-CSchemaSystem* g_pSchemaSystem2 = nullptr;
+CSchemaSystem *g_pSchemaSystem2 = nullptr;
 IVEngineServer2 *g_pEngineServer2 = nullptr;
 CGameConfig *g_GameConfig = nullptr;
 
@@ -16,7 +16,6 @@ void Message(const char *msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-
 
 	char buf[1024] = {};
 	V_vsnprintf(buf, sizeof(buf) - 1, msg, args);
@@ -53,14 +52,14 @@ bool GameBanFix::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bo
 
 	std::string gamedirname = CGameConfig::GetDirectoryName(gamedirpath.Get());
 
-	#ifdef _WIN32
-		const char* gamedataPath = "addons/gamebanfix/bin/win64/gamedata/gamebanfix.games.txt";
-	#else
-		const char* gamedataPath = "addons/gamebanfix/bin/linuxsteamrt64/gamedata/gamebanfix.games.txt";
-	#endif
-	#ifdef DEBUG
+#ifdef _WIN32
+	const char *gamedataPath = "addons/gamebanfix/bin/win64/gamedata/gamebanfix.games.txt";
+#else
+	const char *gamedataPath = "addons/gamebanfix/bin/linuxsteamrt64/gamedata/gamebanfix.games.txt";
+#endif
+#ifdef DEBUG
 	Message("Loading %s for game: %s\n", gamedataPath, gamedirname.c_str());
-	#endif
+#endif
 
 	g_GameConfig = new CGameConfig(gamedirname, gamedataPath);
 	char conf_error[255] = "";
@@ -109,12 +108,12 @@ void GameBanFix::AllPluginsLoaded()
 {
 }
 
-void GameBanFix::OnLevelInit(char const* pMapName,
-	char const* pMapEntities,
-	char const* pOldLevel,
-	char const* pLandmarkName,
-	bool loadGame,
-	bool background)
+void GameBanFix::OnLevelInit(char const *pMapName,
+							 char const *pMapEntities,
+							 char const *pOldLevel,
+							 char const *pLandmarkName,
+							 bool loadGame,
+							 bool background)
 {
 }
 
@@ -129,7 +128,7 @@ const char *GameBanFix::GetLicense()
 
 const char *GameBanFix::GetVersion()
 {
-	return "1.0.3";
+	return "1.0.4";
 }
 
 const char *GameBanFix::GetDate()
