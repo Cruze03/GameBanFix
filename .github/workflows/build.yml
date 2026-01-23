@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: gamebanfix
+          path: ${{ github.event.repository.name }}
           submodules: recursive
           fetch-depth: 0
 
@@ -91,7 +91,7 @@ jobs:
           cd ambuild && python setup.py install && cd ..
 # -------------------------------
       - name: Build
-        working-directory: gamebanfix
+        working-directory: ${{ github.event.repository.name }}
         shell: bash
         run: |
           mkdir build && cd build
@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}
-          path: gamebanfix/build/package
+          path: ${{ github.event.repository.name }}/build/package
 
   release:
     name: Release
