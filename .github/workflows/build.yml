@@ -48,48 +48,29 @@ jobs:
           ref: cs2
           path: hl2sdk-cs2
 
-      - name: Checkout HL2SDK Manifests
-        uses: actions/checkout@v4
-        with:
-          repository: alliedmodders/hl2sdk-manifests
-          ref: master
-          path: hl2sdk-manifests
-# ------------ Windows ------------
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        if: runner.os == 'Windows'
-        with:
-          python-version: "3.11"
-
-      - name: Install pip
-        if: runner.os == 'Windows'
-        shell: cmd
-        run: curl https://bootstrap.pypa.io/pip/3.6/get-pip.py | python
-
-      - name: Clone AMBuild
-        uses: actions/checkout@v6
-        if: runner.os == 'Windows'
-        with:
-          repository: alliedmodders/ambuild
-          path: ./ambuild
-
-      - name: Install AMBuild
-        if: runner.os == 'Windows'
-        run: |
-          python -m pip install ./ambuild
-# ------------ Linux ------------
       - name: Checkout AMBuild
         uses: actions/checkout@v4
-        if: runner.os == 'Linux'
         with:
           repository: alliedmodders/ambuild
           path: ambuild
 
       - name: Install AMBuild
-        if: runner.os == 'Linux'
+        shell: bash
         run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            pip install setuptools
+          fi
           cd ambuild && python setup.py install && cd ..
-# -------------------------------
+
+      - name: Install Clang 21
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-21 main" >> /etc/apt/sources.list.d/llvm.list
+          echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-21 main" >> /etc/apt/sources.list.d/llvm.list
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          apt update && apt install -y clang-21
+          ln -sf /usr/bin/clang-21 /usr/bin/clang && ln -sf /usr/bin/clang++-21 /usr/bin/clang++
+
       - name: Build
         working-directory: ${{ github.event.repository.name }}
         shell: bash
