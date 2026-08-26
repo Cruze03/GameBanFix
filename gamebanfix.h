@@ -3,11 +3,10 @@
 
 #pragma once
 
+#include <ISmmPlugin.h>
 #include "igameevents.h"
 #include "tier0/commonmacros.h"
 #include "networksystem/inetworkserializer.h"
-#include <ISmmPlugin.h>
-#include <iplayerinfo.h>
 #include <iserver.h>
 #include <sh_vector.h>
 
@@ -19,12 +18,12 @@ public:
 	bool Pause(char *error, size_t maxlen);
 	bool Unpause(char *error, size_t maxlen);
 	void AllPluginsLoaded();
-	void OnLevelInit( char const *pMapName,
-				 char const *pMapEntities,
-				 char const *pOldLevel,
-				 char const *pLandmarkName,
-				 bool loadGame,
-				 bool background );
+	void OnLevelInit(char const *pMapName,
+					 char const *pMapEntities,
+					 char const *pOldLevel,
+					 char const *pLandmarkName,
+					 bool loadGame,
+					 bool background);
 	void OnLevelShutdown();
 
 public:

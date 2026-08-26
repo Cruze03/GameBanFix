@@ -20,5 +20,13 @@
 				"linux"			"\x48\x8D\x35\x2A\x2A\x2A\x2A\x89\xC2\x48\x63\x46"
 			}
 		}
+		"Offsets"
+		{
+			"GameEntitySystem"
+			{
+				"windows"		"88"
+				"linux"			"80"
+			}
+		}
 	}
 }

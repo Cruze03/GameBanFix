@@ -26,7 +26,6 @@ CUtlVector<CDetourBase *> g_vecDetours;
 
 DECLARE_DETOUR(GameSystem_Think_CheckSteamBan, Detour_GameSystem_Think_CheckSteamBan);
 
-
 bool InitDetours(CGameConfig *gameConfig)
 {
 	bool success = true;
@@ -52,7 +51,7 @@ void FASTCALL Detour_GameSystem_Think_CheckSteamBan()
 	// Implementation shared by @aiolos1045
 	GameSystem_Think_CheckSteamBan();
 
-	CUtlMap<uint32, CGcBanInformation_t, uint32>* pMap = addresses::sm_mapGcBanInformation;
+	auto pMap = addresses::sm_mapGcBanInformation;
 	unsigned int count = pMap->Count();
 
 	// After player has been kicked, remove any ban entries, to prevent spreading to all new joining players

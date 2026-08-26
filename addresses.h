@@ -41,7 +41,7 @@ namespace modules
 	inline CModule *schemasystem;
 	inline CModule *vscript;
 	inline CModule *client;
-	inline CModule* networksystem;
+	inline CModule *networksystem;
 #ifdef _WIN32
 	inline CModule *hammer;
 #endif
@@ -59,7 +59,7 @@ struct CGcBanInformation_t
 namespace addresses
 {
 	bool Initialize(CGameConfig *g_GameConfig);
-	bool InitializeBanMap(CGameConfig* g_GameConfig);
+	bool InitializeBanMap(CGameConfig *g_GameConfig);
 
-	inline CUtlMap<uint32, CGcBanInformation_t, uint32>* sm_mapGcBanInformation;
+	inline CUtlOrderedMap<uint32, CGcBanInformation_t, uint32> *sm_mapGcBanInformation;
 }
