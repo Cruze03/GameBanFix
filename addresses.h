@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * CS2Fixes
- * Copyright (C) 2023-2024 Source2ZE
+ * Copyright (C) 2023-2026 Source2ZE
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -33,33 +33,31 @@
 #define GAMEBIN "/csgo/bin/linuxsteamrt64/"
 #endif
 
-namespace modules
-{
-	inline CModule *engine;
-	inline CModule *tier0;
-	inline CModule *server;
-	inline CModule *schemasystem;
-	inline CModule *vscript;
-	inline CModule *client;
-	inline CModule *networksystem;
+namespace modules {
+inline CModule* engine;
+inline CModule* tier0;
+inline CModule* server;
+inline CModule* schemasystem;
+inline CModule* vscript;
+inline CModule* client;
+inline CModule* networksystem;
 #ifdef _WIN32
-	inline CModule *hammer;
+inline CModule* hammer;
 #endif
-}
+} // namespace modules
 
 // Can't be forward-declared, can't include cgamerules.h.. just define it here
 struct CGcBanInformation_t
 {
-	uint32_t m_uiReason;
-	double m_dblUnk;
-	double m_dblExpiration;
-	uint32_t m_uiAccountId;
+    uint32_t m_uiReason;
+    double m_dblUnk;
+    double m_dblExpiration;
+    uint32_t m_uiAccountId;
 };
 
-namespace addresses
-{
-	bool Initialize(CGameConfig *g_GameConfig);
-	bool InitializeBanMap(CGameConfig *g_GameConfig);
+namespace addresses {
+bool Initialize(CGameConfig* g_GameConfig);
+bool InitializeBanMap();
 
-	inline CUtlOrderedMap<uint32, CGcBanInformation_t, uint32> *sm_mapGcBanInformation;
-}
+inline CUtlOrderedMap<uint32, CGcBanInformation_t, uint32>* sm_mapGcBanInformation;
+} // namespace addresses

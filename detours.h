@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * CS2Fixes
- * Copyright (C) 2023-2024 Source2ZE
+ * Copyright (C) 2023-2026 Source2ZE
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,10 +18,10 @@
  */
 
 #pragma once
-#include "cdetour.h"
+#include "addresses.h"
+#include "khook.hpp"
 
+void InitKHooks();
 
-bool InitDetours(CGameConfig *gameConfig);
-void FlushAllDetours();
-
-void FASTCALL Detour_GameSystem_Think_CheckSteamBan();
+KHook::Return<void> Detour_GameSystem_Think_CheckSteamBan();
+KHook::Return<void> Detour_GameSystem_Think_CheckSteamBan_Post();

@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * CS2Fixes
- * Copyright (C) 2023-2024 Source2ZE
+ * Copyright (C) 2023-2026 Source2ZE
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -16,45 +16,54 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "cdetour.h"
 #include "detours.h"
+#include "convar.h"
 #include "gameconfig.h"
+#include "khook_helpers.h"
 
-#include "tier0/memdbgon.h"
+KHOOK_FUNCTION(GameSystem_Think_CheckSteamBan, Detour_GameSystem_Think_CheckSteamBan, Detour_GameSystem_Think_CheckSteamBan_Post);
 
-CUtlVector<CDetourBase *> g_vecDetours;
-
-DECLARE_DETOUR(GameSystem_Think_CheckSteamBan, Detour_GameSystem_Think_CheckSteamBan);
-
-bool InitDetours(CGameConfig *gameConfig)
+std::vector<CKHookBase*>& GetKHookList()
 {
-	bool success = true;
-
-	FOR_EACH_VEC(g_vecDetours, i)
-	{
-		if (!g_vecDetours[i]->CreateDetour(gameConfig))
-			success = false;
-
-		g_vecDetours[i]->EnableDetour();
-	}
-
-	return success;
+    static std::vector<CKHookBase*> s_vecSigHooks;
+    return s_vecSigHooks;
 }
 
-void FlushAllDetours()
+void InitKHooks()
 {
-	g_vecDetours.Purge();
+    for (auto hook : GetKHookList())
+        hook->Configure();
 }
 
-void FASTCALL Detour_GameSystem_Think_CheckSteamBan()
+KHook::Return<void> Detour_GameSystem_Think_CheckSteamBan()
 {
-	// Implementation shared by @aiolos1045
-	GameSystem_Think_CheckSteamBan();
+    auto pMap = addresses::sm_mapGcBanInformation;
+    static ConVarRefAbstract sv_kick_players_with_cooldown("sv_kick_players_with_cooldown");
 
-	auto pMap = addresses::sm_mapGcBanInformation;
-	unsigned int count = pMap->Count();
+    // Fix competitive cooldowns still being applied without sv_kick_players_with_cooldown 2
+    if (sv_kick_players_with_cooldown.GetInt() < 2)
+    {
+        for (int i = pMap->FirstInorder(); i != pMap->InvalidIndex();)
+        {
+            int next = pMap->NextInorder(i);
+            uint32_t reason = pMap->Element(i).m_uiReason;
 
-	// After player has been kicked, remove any ban entries, to prevent spreading to all new joining players
-	if (count > 0)
-		pMap->RemoveAll();
+            if (reason == 20 || reason == 22 || reason == 23) pMap->RemoveAt(i);
+
+            i = next;
+        }
+    }
+
+    return { KHook::Action::Ignore };
+}
+
+KHook::Return<void> Detour_GameSystem_Think_CheckSteamBan_Post()
+{
+    auto pMap = addresses::sm_mapGcBanInformation;
+
+    // After player has been kicked, remove any ban entries, to prevent spreading to all new joining players
+    // Implementation shared by @aiolos1045
+    if (pMap->Count() > 0) pMap->RemoveAll();
+
+    return { KHook::Action::Ignore };
 }

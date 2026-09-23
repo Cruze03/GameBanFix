@@ -22,27 +22,31 @@ for sdk_target in MMSPlugin.sdk_targets:
     os.path.join(sdk['path'], 'entity2', 'entityidentity.cpp'),
   ]
 
-
   binary.compiler.cxxincludes += [
-    os.path.join(builder.sourcePath, 'vendor', 'funchook', 'include'),
+    os.path.join(builder.sourcePath, 'utils'),
   ]
 
   target_folder = 'Debug' if builder.options.debug else 'Release'
 
   if binary.compiler.target.platform == 'linux':
-    binary.compiler.postlink += [
-      os.path.join(builder.sourcePath, 'vendor', 'funchook', 'lib', target_folder, 'libfunchook.a'),
-      os.path.join(builder.sourcePath, 'vendor', 'funchook', 'lib', target_folder, 'libdistorm.a'),
-    ]
     binary.sources += ['utils/plat_unix.cpp']
   elif binary.compiler.target.platform == 'windows':
     binary.compiler.postlink += [
         os.path.join('psapi.lib'),
-        os.path.join(builder.sourcePath, 'vendor', 'funchook', 'lib', target_folder, 'funchook.lib'),
-        os.path.join(builder.sourcePath, 'vendor', 'funchook', 'lib', target_folder, 'distorm.lib'),
         os.path.join(sdk['path'], 'lib', 'public', 'win64', 'steam_api64.lib')
       ]
     binary.sources += ['utils/plat_win.cpp']
+
+  binary.custom = [
+    builder.tools.Protoc(
+      protoc=sdk_target.protoc,
+      sources=[
+          os.path.join(sdk["path"], "common", "valveextensions.proto"),
+          os.path.join(sdk["path"], "common", "network_connection.proto"),
+          os.path.join(sdk["path"], "common", "networkbasetypes.proto"),
+      ],
+    )
+  ]
 
   nodes = builder.Add(binary)
   MMSPlugin.binaries += [nodes]
