@@ -89,6 +89,12 @@ bool GameBanFix::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bo
         return false;
     }
 
+    if (!g_bRequiredInitLoaded)
+    {
+        snprintf(error, maxlen, "One or more address lookups failed, please refer to startup logs for more information");
+        return false;
+    }
+
     InitKHooks();
 
     return true;
