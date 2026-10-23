@@ -5,8 +5,8 @@
 #include "khook_helpers.h"
 #include "utils/module.h"
 #include "schemasystem/schemasystem.h"
-#include <KeyValues.h>
-#include "entity2/entitysystem.h"
+#include <keyvalues.h>
+#include "gameentitysystem.h"
 
 CSchemaSystem* g_pSchemaSystem2 = nullptr;
 IVEngineServer2* g_pEngineServer2 = nullptr;
@@ -15,12 +15,6 @@ CGameConfig* g_GameConfig = nullptr;
 bool g_bRequiredInitLoaded = true;
 
 GameBanFix g_Plugin;
-
-CGameEntitySystem* GameEntitySystem()
-{
-    static int offset = g_GameConfig->GetOffset("GameEntitySystem");
-    return *reinterpret_cast<CGameEntitySystem**>((uintptr_t)(g_pGameResourceServiceServer) + offset);
-}
 
 void Message(const char* msg, ...)
 {
@@ -89,13 +83,13 @@ bool GameBanFix::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bo
         return false;
     }
 
+    InitKHooks();
+
     if (!g_bRequiredInitLoaded)
     {
         snprintf(error, maxlen, "One or more address lookups failed, please refer to startup logs for more information");
         return false;
     }
-
-    InitKHooks();
 
     return true;
 }
@@ -113,22 +107,3 @@ void GameBanFix::OnLevelInit(char const* pMapName, char const* pMapEntities, cha
 }
 
 void GameBanFix::OnLevelShutdown() {}
-
-const char* GameBanFix::GetLicense() { return "GPLv3"; }
-
-const char* GameBanFix::GetVersion() { return "1.0.8"; }
-
-const char* GameBanFix::GetDate() { return __DATE__; }
-
-const char* GameBanFix::GetLogTag() { return "GameBanFix"; }
-
-const char* GameBanFix::GetAuthor() { return "aiolos1045, Vauff - Standalone version by Cruze"; }
-
-const char* GameBanFix::GetDescription()
-{
-    return "Fixes issue where if a player with game ban joins, other players even without a ban are then unable to join.";
-}
-
-const char* GameBanFix::GetName() { return "Fix Game Bans"; }
-
-const char* GameBanFix::GetURL() { return "https://github.com/cruze03"; }

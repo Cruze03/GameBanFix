@@ -1,6 +1,8 @@
 # vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
 import os
 
+project = builder.LibraryProject(MMSPlugin.metadata["name"])
+
 # Here only one sdk should be available to generate only one executable in the end,
 # as multi-sdk loading isn't supported out of the box by metamod, and would require specifying the full path in the vdf
 # which in the end would ruin the multi-platform (unix, win etc) loading by metamod as it won't be able to append platform specific extension
@@ -10,7 +12,7 @@ for sdk_target in MMSPlugin.sdk_targets:
   sdk = sdk_target.sdk
   cxx = sdk_target.cxx
 
-  binary = MMSPlugin.HL2Library(builder, cxx, MMSPlugin.plugin_name, sdk)
+  binary = MMSPlugin.HL2Library(builder, cxx, project, sdk)
 
   binary.sources += [
     'gamebanfix.cpp',
@@ -48,5 +50,4 @@ for sdk_target in MMSPlugin.sdk_targets:
     )
   ]
 
-  nodes = builder.Add(binary)
-  MMSPlugin.binaries += [nodes]
+  MMSPlugin.tasks += builder.Add(project)

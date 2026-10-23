@@ -112,7 +112,7 @@ bool CGameConfig::IsSymbol(const char* name)
     const char* sigOrSymbol = this->GetSignature(name);
     if (!sigOrSymbol || strlen(sigOrSymbol) <= 0)
     {
-        Error("Missing signature or symbol", name);
+        Error("Missing signature or symbol: %s\n", name);
         return false;
     }
     return sigOrSymbol[0] == '@';
@@ -124,7 +124,7 @@ const char* CGameConfig::GetSymbol(const char* name)
 
     if (!symbol || strlen(symbol) <= 1)
     {
-        Error("Missing symbol", name);
+        Error("Missing symbol: %s\n", name);
         return nullptr;
     }
     return symbol + 1;

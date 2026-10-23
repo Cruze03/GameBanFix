@@ -4,11 +4,19 @@
 #pragma once
 
 #include <ISmmPlugin.h>
+#include "engine2/ivengineserver2.h"
 #include "igameevents.h"
 #include "tier0/commonmacros.h"
 #include "networksystem/inetworkserializer.h"
-#include <iserver.h>
+#include "edict.h"
+#include "playerslot.h"
 #include "khook.hpp"
+
+#ifdef AMBUILD
+#include "version_gen.h"
+#else
+#include "version_gen_placeholder.h"
+#endif
 
 class GameBanFix : public ISmmPlugin, public IMetamodListener
 {
@@ -22,14 +30,14 @@ class GameBanFix : public ISmmPlugin, public IMetamodListener
     void OnLevelShutdown();
 
   public:
-    const char* GetAuthor();
-    const char* GetName();
-    const char* GetDescription();
-    const char* GetURL();
-    const char* GetLicense();
-    const char* GetVersion();
-    const char* GetDate();
-    const char* GetLogTag();
+    const char* GetAuthor() override { return PLUGIN_AUTHOR; }
+    const char* GetName() override { return PLUGIN_DISPLAY_NAME; }
+    const char* GetDescription() override { return PLUGIN_DESCRIPTION; }
+    const char* GetURL() override { return PLUGIN_URL; }
+    const char* GetLicense() override { return PLUGIN_LICENSE; }
+    const char* GetVersion() override { return PLUGIN_FULL_VERSION; }
+    const char* GetDate() override { return __DATE__; }
+    const char* GetLogTag() override { return PLUGIN_LOGTAG; }
 };
 
 extern GameBanFix g_Plugin;

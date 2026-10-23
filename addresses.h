@@ -22,6 +22,7 @@
 #include "stdint.h"
 #include "utils/module.h"
 #include "utlstring.h"
+#include "utlmap.h"
 #include "variant.h"
 #include "gameconfig.h"
 

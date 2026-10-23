@@ -24,7 +24,7 @@ jobs:
         include:
           - os: windows-latest
           - os: ubuntu-latest
-            container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
+            container: ghcr.io/source2ze/build-containers:steamrt3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,35 +41,27 @@ jobs:
           path: mmsource-2.0
           submodules: recursive
 
-      - name: Checkout HL2SDK
+      - name: Checkout S2SDK
         uses: actions/checkout@v4
         with:
-          repository: alliedmodders/hl2sdk
+          repository: alliedmodders/s2sdk
           ref: cs2
-          path: hl2sdk-cs2
+          path: s2sdk
 
+      # The steamrt3 container ships AMBuild, clang and lld already.
       - name: Checkout AMBuild
+        if: matrix.os == 'windows-latest'
         uses: actions/checkout@v4
         with:
           repository: alliedmodders/ambuild
           path: ambuild
 
       - name: Install AMBuild
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            pip install setuptools
-          fi
+          pip install setuptools
           cd ambuild && python setup.py install && cd ..
-
-      - name: Install Clang 21
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-21 main" >> /etc/apt/sources.list.d/llvm.list
-          echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-21 main" >> /etc/apt/sources.list.d/llvm.list
-          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          apt update && apt install -y clang-21
-          ln -sf /usr/bin/clang-21 /usr/bin/clang && ln -sf /usr/bin/clang++-21 /usr/bin/clang++
 
       - name: Build
         working-directory: ${{ github.event.repository.name }}

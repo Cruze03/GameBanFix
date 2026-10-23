@@ -1,0 +1,11 @@
+{
+    "name": "gamebanfix",
+    "alias": "gamebanfix",
+    "display_name": "Fix Game Bans",
+    "description": "Fixes issue where if a player with game ban joins, other players even without a ban are then unable to join.",
+    "author": "aiolos1045, Vauff - Standalone version by Cruze",
+    "url": "https://github.com/cruze03",
+    "log_tag": "GameBanFix",
+    "license": "GPLv3",
+    "version": "1.0.9"
+}
