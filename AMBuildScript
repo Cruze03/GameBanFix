@@ -179,7 +179,11 @@ class MMSPluginConfig(object):
       # Allow pointing --hl2sdk-root directly at a single SDK checkout.
       if os.path.isdir(os.path.join(hl2sdk_root, 'public')):
         return os.path.abspath(os.path.normpath(hl2sdk_root))
-    return resolveEnvPath('HL2SDK{}'.format(sdk_name.upper()), dir_name)
+    sdk_path = resolveEnvPath('HL2SDK{}'.format(sdk_name.upper()), dir_name)
+    if sdk_path:
+      return sdk_path
+    # Fall back to an s2sdk checkout next to the project (how CI lays things out).
+    return resolveEnvPath('S2SDK', 's2sdk')
 
   def detectSDKs(self):
     sdk_list = [s for s in builder.options.sdks.split(',') if s]
